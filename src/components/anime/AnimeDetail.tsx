@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Star, Tv, Calendar, Users, Clapperboard, Film, PlayCircle, Heart } from 'lucide-react';
+import { Star, Tv, Calendar, Users, Clapperboard, Film, PlayCircle, Heart, Link as LinkIcon, Mic2 } from 'lucide-react';
 import { MotionDiv } from '@/components/MotionDiv';
 import AnimeCard from './AnimeCard';
 
@@ -91,14 +91,14 @@ export default function AnimeDetail({ anime }: AnimeDetailProps) {
                     <div className="prose prose-invert max-w-none text-muted-foreground" dangerouslySetInnerHTML={{ __html: anime.description?.replace(/\n/g, '<br />') || 'No description available.' }} />
                 </CardContent>
             </Card>
-
+            
             {anime.characters?.edges.length > 0 && (
               <Card>
                 <CardHeader>
                   <CardTitle className="font-headline">Characters</CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                  {anime.characters.edges.filter(c => c.role === 'MAIN').map(({ node: char }) => (
+                  {anime.characters.edges.map(({ node: char, voiceActors }) => (
                     <div key={char.id} className="text-center">
                       <Image
                         src={char.image.large}
@@ -109,6 +109,35 @@ export default function AnimeDetail({ anime }: AnimeDetailProps) {
                         data-ai-hint="anime character"
                       />
                       <p className="text-sm mt-2 font-medium">{char.name.full}</p>
+                      {voiceActors[0] && (
+                        <p className="text-xs text-muted-foreground">{voiceActors[0].name.full}</p>
+                      )}
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {anime.staff?.edges.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="font-headline">Staff</CardTitle>
+                </CardHeader>
+                <CardContent className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+                  {anime.staff.edges.map(({ node: staff, role }) => (
+                    <div key={staff.id} className="flex items-center gap-3">
+                       <Image
+                        src={staff.image.large}
+                        alt={staff.name.full}
+                        width={60}
+                        height={60}
+                        className="rounded-full object-cover"
+                        data-ai-hint="person face"
+                      />
+                      <div>
+                        <p className="font-semibold text-sm">{staff.name.full}</p>
+                        <p className="text-xs text-muted-foreground">{role}</p>
+                      </div>
                     </div>
                   ))}
                 </CardContent>
@@ -130,6 +159,24 @@ export default function AnimeDetail({ anime }: AnimeDetailProps) {
                         </div>
                     </CardContent>
                 </Card>
+            )}
+
+            {anime.relations?.edges.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Related Media</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {anime.relations.edges.map(({ node, relationType }) => (
+                      <div key={node.id}>
+                        <AnimeCard anime={node} />
+                        <p className="text-sm text-center mt-1 text-muted-foreground">{relationType.replace(/_/g, ' ')}</p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             )}
 
           </div>
@@ -170,6 +217,24 @@ export default function AnimeDetail({ anime }: AnimeDetailProps) {
                 </div>
               </CardContent>
             </Card>
+
+            {anime.externalLinks && anime.externalLinks.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Stream</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col space-y-2">
+                  {anime.externalLinks.map(link => (
+                    <Button asChild key={link.id} variant="outline">
+                      <a href={link.url} target="_blank" rel="noopener noreferrer">
+                        <LinkIcon className="mr-2" />
+                        {link.site}
+                      </a>
+                    </Button>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </div>

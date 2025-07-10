@@ -64,7 +64,27 @@ export const GET_ANIME_DETAILS = gql`
         id
         site
       }
-      characters(role: MAIN, sort: ROLE) {
+      characters(role: MAIN, sort: [ROLE, RELEVANCE], perPage: 12) {
+        edges {
+          role
+          voiceActors(language: JAPANESE, sort: RELEVANCE) {
+            id
+            name {
+              full
+            }
+          }
+          node {
+            id
+            name {
+              full
+            }
+            image {
+              large
+            }
+          }
+        }
+      }
+      staff(sort: [RELEVANCE, ROLE], perPage: 8) {
         edges {
           role
           node {
@@ -78,7 +98,21 @@ export const GET_ANIME_DETAILS = gql`
           }
         }
       }
-      recommendations(sort: RATING_DESC) {
+      relations {
+        edges {
+          relationType(version: 2)
+          node {
+            ...AnimeCard
+          }
+        }
+      }
+      externalLinks {
+        id
+        url
+        site
+        icon
+      }
+      recommendations(sort: RATING_DESC, perPage: 8) {
         nodes {
           mediaRecommendation {
             ...AnimeCard

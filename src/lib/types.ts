@@ -30,6 +30,12 @@ export interface Anime {
   characters: {
     edges: {
       role: string;
+      voiceActors: {
+        id: number;
+        name: {
+          full: string;
+        }
+      }[];
       node: {
         id: number;
         name: {
@@ -41,6 +47,32 @@ export interface Anime {
       };
     }[];
   };
+  staff: {
+    edges: {
+      role: string;
+      node: {
+        id: number;
+        name: {
+          full: string;
+        };
+        image: {
+          large: string;
+        };
+      };
+    }[];
+  };
+  relations: {
+    edges: {
+      relationType: string;
+      node: Anime;
+    }[];
+  };
+  externalLinks: {
+    id: number;
+    url: string;
+    site: string;
+    icon: string;
+  }[];
   recommendations: {
     nodes: {
       mediaRecommendation: Anime;
