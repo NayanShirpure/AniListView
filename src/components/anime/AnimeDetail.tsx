@@ -122,7 +122,9 @@ export default function AnimeDetail({ anime }: AnimeDetailProps) {
                     </CardHeader>
                     <CardContent>
                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                            {anime.recommendations.nodes.map(({ mediaRecommendation }) => (
+                            {anime.recommendations.nodes
+                              .filter(rec => rec.mediaRecommendation)
+                              .map(({ mediaRecommendation }) => (
                                 <AnimeCard key={mediaRecommendation.id} anime={mediaRecommendation} />
                             ))}
                         </div>
