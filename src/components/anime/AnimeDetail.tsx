@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { Anime } from '@/lib/types';
@@ -125,7 +126,7 @@ export default function AnimeDetail({ anime }: AnimeDetailProps) {
                 </CardHeader>
                 <CardContent className="grid grid-cols-2 sm:grid-cols-3 gap-6">
                   {anime.staff.edges.map(({ node: staff, role }) => (
-                    <div key={staff.id} className="flex items-center gap-3">
+                    <div key={`${staff.id}-${role}`} className="flex items-center gap-3">
                        <Image
                         src={staff.image.large}
                         alt={staff.name.full}
