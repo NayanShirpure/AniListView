@@ -11,7 +11,6 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/top", label: "Top Anime" },
   { href: "/schedule", label: "Schedule" },
-  { href: "/recommendations", label: "For You" },
 ];
 
 export default function Header() {
