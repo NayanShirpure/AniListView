@@ -9,6 +9,7 @@ export const ANIME_CARD_FRAGMENT = gql`
     }
     coverImage {
       extraLarge
+      large
       color
     }
     averageScore
