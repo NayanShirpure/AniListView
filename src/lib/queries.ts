@@ -17,6 +17,15 @@ export const ANIME_CARD_FRAGMENT = gql`
     status
     season
     seasonYear
+    episodes
+    duration
+    description(asHtml: false)
+    bannerImage
+    startDate {
+      year
+      month
+      day
+    }
   }
 `;
 
@@ -53,8 +62,6 @@ export const GET_ANIME_DETAILS = gql`
   query GetAnimeDetails($id: Int) {
     Media(id: $id, type: ANIME) {
       ...AnimeCard
-      bannerImage
-      description(asHtml: false)
       genres
       studios(isMain: true) {
         nodes {
@@ -120,15 +127,9 @@ export const GET_ANIME_DETAILS = gql`
           }
         }
       }
-      episodes
       nextAiringEpisode {
         airingAt
         episode
-      }
-      startDate {
-        year
-        month
-        day
       }
       popularity
     }

@@ -8,11 +8,11 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-export async function getTrendingAnime(): Promise<Anime[]> {
+export async function getTrendingAnime(perPage = 15): Promise<Anime[]> {
   try {
     const { data } = await client.query({
       query: GET_TRENDING_ANIME,
-      variables: { page: 1, perPage: 15 },
+      variables: { page: 1, perPage },
     });
     return data.Page.media;
   } catch (error) {

@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import TopRatedGrid from '@/components/anime/TopRatedGrid';
 import UpcomingCarousel from '@/components/anime/UpcomingCarousel';
 import { MotionDiv } from '@/components/MotionDiv';
+import SpotlightCarousel from '@/components/anime/SpotlightCarousel';
 
 function CarouselSkeleton() {
   return (
@@ -20,6 +21,14 @@ function CarouselSkeleton() {
       ))}
     </div>
   );
+}
+
+function SpotlightSkeleton() {
+    return (
+        <div className="w-full">
+            <Skeleton className="h-[450px] w-full rounded-lg" />
+        </div>
+    )
 }
 
 function GridSkeleton() {
@@ -37,8 +46,8 @@ function GridSkeleton() {
 }
 
 async function TrendingAnimeData() {
-  const trending = await getTrendingAnime();
-  return <TrendingCarousel trendingAnime={trending} />;
+  const trending = await getTrendingAnime(5); // Fetch top 5 for spotlight
+  return <SpotlightCarousel trendingAnime={trending} />;
 }
 
 async function SeasonalAnimeData() {
@@ -68,9 +77,21 @@ export default async function HomePage() {
         transition={{ duration: 0.5 }}
       >
         <section>
+          <Suspense fallback={<SpotlightSkeleton />}>
+            <TrendingAnimeData />
+          </Suspense>
+        </section>
+      </MotionDiv>
+
+      <MotionDiv
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        <section>
           <h1 className="font-headline text-3xl font-bold mb-6">Trending Now</h1>
           <Suspense fallback={<CarouselSkeleton />}>
-            <TrendingAnimeData />
+            <TrendingCarousel trendingAnime={await getTrendingAnime()} />
           </Suspense>
         </section>
       </MotionDiv>
@@ -80,7 +101,7 @@ export default async function HomePage() {
             className="lg:col-span-2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
         >
           <section>
             <h2 className="font-headline text-3xl font-bold mb-6 capitalize">
@@ -95,7 +116,7 @@ export default async function HomePage() {
             className="lg:col-span-1"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
         >
             <section>
                 <h2 className="font-headline text-3xl font-bold mb-6">Top Rated All Time</h2>
@@ -109,7 +130,7 @@ export default async function HomePage() {
       <MotionDiv
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.6 }}
+        transition={{ duration: 0.5, delay: 0.8 }}
       >
         <section>
           <h2 className="font-headline text-3xl font-bold mb-6 capitalize">

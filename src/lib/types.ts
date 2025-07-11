@@ -13,6 +13,7 @@ export interface Anime {
   bannerImage: string;
   description: string;
   episodes: number;
+  duration: number;
   status: 'FINISHED' | 'RELEASING' | 'NOT_YET_RELEASED' | 'CANCELLED' | 'HIATUS';
   season: 'WINTER' | 'SPRING' | 'SUMMER' | 'FALL';
   seasonYear: number;
