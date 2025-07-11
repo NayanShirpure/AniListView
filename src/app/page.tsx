@@ -1,9 +1,12 @@
-import { getTrendingAnime, getSeasonalAnime } from '@/lib/anilist';
+import { getTrendingAnime, getSeasonalAnime, getTopRatedAnime, getUpcomingAnime } from '@/lib/anilist';
 import TrendingCarousel from '@/components/anime/TrendingCarousel';
 import SeasonalGrid from '@/components/anime/SeasonalGrid';
-import { getCurrentSeason } from '@/lib/utils';
+import { getCurrentSeason, getNextSeason } from '@/lib/utils';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import TopRatedGrid from '@/components/anime/TopRatedGrid';
+import UpcomingCarousel from '@/components/anime/UpcomingCarousel';
+import { MotionDiv } from '@/components/MotionDiv';
 
 function CarouselSkeleton() {
   return (
@@ -43,26 +46,81 @@ async function SeasonalAnimeData() {
   return <SeasonalGrid seasonalAnime={seasonal} />;
 }
 
+async function TopRatedAnimeData() {
+    const topRated = await getTopRatedAnime();
+    return <TopRatedGrid topRatedAnime={topRated} />;
+}
+
+async function UpcomingAnimeData() {
+    const upcoming = await getUpcomingAnime();
+    return <UpcomingCarousel upcomingAnime={upcoming} />;
+}
+
 export default async function HomePage() {
   const { season, year } = getCurrentSeason();
+  const nextSeason = getNextSeason();
 
   return (
-    <div className="space-y-12">
-      <section>
-        <h1 className="font-headline text-3xl font-bold mb-4">Trending Now</h1>
-        <Suspense fallback={<CarouselSkeleton />}>
-          <TrendingAnimeData />
-        </Suspense>
-      </section>
+    <div className="space-y-16">
+      <MotionDiv
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <section>
+          <h1 className="font-headline text-3xl font-bold mb-6">Trending Now</h1>
+          <Suspense fallback={<CarouselSkeleton />}>
+            <TrendingAnimeData />
+          </Suspense>
+        </section>
+      </MotionDiv>
 
-      <section>
-        <h2 className="font-headline text-3xl font-bold mb-4 capitalize">
-          {season.toLowerCase()} {year} Season
-        </h2>
-        <Suspense fallback={<GridSkeleton />}>
-          <SeasonalAnimeData />
-        </Suspense>
-      </section>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-8">
+        <MotionDiv
+            className="lg:col-span-2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <section>
+            <h2 className="font-headline text-3xl font-bold mb-6 capitalize">
+              Popular This Season - {season.toLowerCase()} {year}
+            </h2>
+            <Suspense fallback={<GridSkeleton />}>
+              <SeasonalAnimeData />
+            </Suspense>
+          </section>
+        </MotionDiv>
+        <MotionDiv
+            className="lg:col-span-1"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+        >
+            <section>
+                <h2 className="font-headline text-3xl font-bold mb-6">Top Rated All Time</h2>
+                <Suspense fallback={<GridSkeleton />}>
+                    <TopRatedAnimeData />
+                </Suspense>
+            </section>
+        </MotionDiv>
+      </div>
+      
+      <MotionDiv
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+      >
+        <section>
+          <h2 className="font-headline text-3xl font-bold mb-6 capitalize">
+            Upcoming Next Season - {nextSeason.season.toLowerCase()} {nextSeason.year}
+          </h2>
+          <Suspense fallback={<CarouselSkeleton />}>
+            <UpcomingAnimeData />
+          </Suspense>
+        </section>
+      </MotionDiv>
+
     </div>
   );
 }

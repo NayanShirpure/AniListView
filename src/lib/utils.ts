@@ -24,3 +24,13 @@ export function getCurrentSeason() {
 
   return { season, year };
 }
+
+export function getNextSeason() {
+    const { season, year } = getCurrentSeason();
+    switch (season) {
+        case 'WINTER': return { season: 'SPRING', year };
+        case 'SPRING': return { season: 'SUMMER', year };
+        case 'SUMMER': return { season: 'FALL', year };
+        case 'FALL': return { season: 'WINTER', year: year + 1 };
+    }
+}

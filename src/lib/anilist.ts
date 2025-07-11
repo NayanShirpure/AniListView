@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import type { PageResult, Anime, AiringScheduleItem } from './types';
 import { GET_TRENDING_ANIME, GET_SEASONAL_ANIME, GET_ANIME_DETAILS, SEARCH_ANIME, GET_AIRING_SCHEDULE } from './queries';
-import { getCurrentSeason } from './utils';
+import { getCurrentSeason, getNextSeason } from './utils';
 
 const client = new ApolloClient({
   link: new HttpLink({ uri: "https://graphql.anilist.co" }),
@@ -35,6 +35,41 @@ export async function getSeasonalAnime(): Promise<Anime[]> {
   }
 }
 
+export async function getTopRatedAnime(): Promise<Anime[]> {
+    try {
+        const { data } = await client.query({
+            query: SEARCH_ANIME,
+            variables: { page: 1, perPage: 10, sort: ['SCORE_DESC'] },
+        });
+        return data.Page.media;
+    } catch (error) {
+        console.error("Failed to fetch top rated anime:", error);
+        return [];
+    }
+}
+
+export async function getUpcomingAnime(): Promise<Anime[]> {
+    try {
+        const { season, year } = getNextSeason();
+        const { data } = await client.query({
+            query: SEARCH_ANIME,
+            variables: { 
+                page: 1, 
+                perPage: 15, 
+                season: season.toUpperCase(), 
+                seasonYear: year,
+                status: 'NOT_YET_RELEASED',
+                sort: ['POPULARITY_DESC']
+            },
+        });
+        return data.Page.media;
+    } catch (error) {
+        console.error("Failed to fetch upcoming anime:", error);
+        return [];
+    }
+}
+
+
 export async function getAnimeDetails(id: number): Promise<Anime | null> {
   try {
     const { data } = await client.query({
@@ -56,12 +91,13 @@ export async function searchAnime(options: {
   format?: string[];
   season?: string;
   seasonYear?: number;
+  status?: string;
 }): Promise<PageResult> {
-  const { query, page = 1, perPage = 20, sort = ['POPULARITY_DESC'], format, season, seasonYear } = options;
+  const { query, page = 1, perPage = 20, sort = ['POPULARITY_DESC'], format, season, seasonYear, status } = options;
   try {
     const { data } = await client.query({
       query: SEARCH_ANIME,
-      variables: { search: query, page, perPage, sort, format_in: format, season, seasonYear },
+      variables: { search: query, page, perPage, sort, format_in: format, season, seasonYear, status },
     });
     return data.Page;
   } catch (error) {

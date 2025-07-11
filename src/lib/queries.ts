@@ -162,7 +162,7 @@ export const GET_AIRING_SCHEDULE = gql`
 
 export const SEARCH_ANIME = gql`
   ${ANIME_CARD_FRAGMENT}
-  query SearchAnime($page: Int, $perPage: Int, $search: String, $sort: [MediaSort], $format_in: [MediaFormat], $season: MediaSeason, $seasonYear: Int) {
+  query SearchAnime($page: Int, $perPage: Int, $search: String, $sort: [MediaSort], $format_in: [MediaFormat], $season: MediaSeason, $seasonYear: Int, $status: MediaStatus) {
     Page(page: $page, perPage: $perPage) {
       pageInfo {
         total
@@ -171,7 +171,7 @@ export const SEARCH_ANIME = gql`
         hasNextPage
         perPage
       }
-      media(search: $search, sort: $sort, type: ANIME, format_in: $format_in, season: $season, seasonYear: $seasonYear, isAdult: false) {
+      media(search: $search, sort: $sort, type: ANIME, format_in: $format_in, season: $season, seasonYear: $seasonYear, status: $status, isAdult: false) {
         ...AnimeCard
       }
     }
