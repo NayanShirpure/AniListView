@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import type { PageResult, Anime, AiringScheduleItem } from './types';
-import { GET_TRENDING_ANIME, GET_SEASONAL_ANIME, SEARCH_ANIME, GET_AIRING_SCHEDULE, GET_GENRES_AND_TAGS } from './queries';
+import { GET_TRENDING_ANIME, GET_SEASONAL_ANIME, SEARCH_ANIME, GET_ANIME_DETAILS, GET_AIRING_SCHEDULE, GET_GENRES_AND_TAGS } from './queries';
 import { getCurrentSeason, getNextSeason } from './utils';
 
 const client = new ApolloClient({
