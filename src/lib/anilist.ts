@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import type { PageResult, Anime, AiringScheduleItem } from './types';
-import { GET_TRENDING_ANIME, GET_SEASONAL_ANIME, GET_ANIME_DETAILS, SEARCH_ANIME, GET_AIRING_SCHEDULE } from './queries';
+import { GET_TRENDING_ANIME, GET_SEASONAL_ANIME, SEARCH_ANIME, GET_AIRING_SCHEDULE, GET_GENRES_AND_TAGS } from './queries';
 import { getCurrentSeason, getNextSeason } from './utils';
 
 const client = new ApolloClient({
@@ -88,16 +88,25 @@ export async function searchAnime(options: {
   page?: number;
   perPage?: number;
   sort?: string[];
-  format?: string[];
+  genres?: string[];
+  format?: string;
   season?: string;
   seasonYear?: number;
   status?: string;
 }): Promise<PageResult> {
-  const { query, page = 1, perPage = 20, sort = ['POPULARITY_DESC'], format, season, seasonYear, status } = options;
+  const { query, page = 1, perPage = 20, sort = ['POPULARITY_DESC'], genres, format, season, seasonYear, status } = options;
+  const variables: any = { search: query, page, perPage, sort };
+
+  if (genres && genres.length > 0) variables.genre_in = genres;
+  if (format) variables.format = format;
+  if (season) variables.season = season;
+  if (seasonYear) variables.seasonYear = seasonYear;
+  if (status) variables.status = status;
+
   try {
     const { data } = await client.query({
       query: SEARCH_ANIME,
-      variables: { search: query, page, perPage, sort, format_in: format, season, seasonYear, status },
+      variables,
     });
     return data.Page;
   } catch (error) {
@@ -116,5 +125,20 @@ export async function getAiringSchedule(start: number, end: number): Promise<Air
   } catch (error) {
     console.error("Failed to fetch airing schedule:", error);
     return [];
+  }
+}
+
+export async function getGenresAndTags() {
+  try {
+    const { data } = await client.query({
+      query: GET_GENRES_AND_TAGS,
+    });
+    return {
+      genres: data.GenreCollection,
+      tags: data.MediaTagCollection.map((t: any) => ({...t, category: 'Tags'})),
+    }
+  } catch (error) {
+    console.error("Failed to fetch genres and tags:", error);
+    return { genres: [], tags: [] };
   }
 }

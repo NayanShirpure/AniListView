@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { Search, Clapperboard, Menu, X } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Search, Clapperboard, Menu, X, Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Sheet,
   SheetContent,
@@ -16,24 +16,37 @@ import { Button } from "@/components/ui/button";
 
 const navLinks = [
   { href: "/", label: "Home" },
-  { href: "/top", label: "Top Anime" },
+  { href: "/search", label: "Browse" },
   { href: "/schedule", label: "Schedule" },
 ];
 
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
+
+  useEffect(() => {
+    setSearchQuery(searchParams.get('q') || '');
+  }, [searchParams]);
 
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const searchQuery = formData.get("search") as string;
-    if (searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-      setMobileMenuOpen(false);
+    const newQuery = formData.get("search") as string;
+    
+    const params = new URLSearchParams(searchParams);
+    if (newQuery.trim()) {
+        params.set('q', newQuery.trim());
+    } else {
+        params.delete('q');
     }
+    params.set('page', '1');
+
+    router.push(`/search?${params.toString()}`);
+    setMobileMenuOpen(false);
   };
 
   return (
@@ -56,6 +69,15 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
+           <Link
+              href="/search?sort=SCORE_DESC"
+              className={cn(
+                "text-sm font-medium transition-colors hover:text-primary",
+                searchParams.get('sort') === 'SCORE_DESC' ? "text-primary" : "text-muted-foreground"
+              )}
+            >
+              Top Anime
+            </Link>
         </nav>
         <div className="flex-1" />
         <form onSubmit={handleSearch} className="relative w-full max-w-xs ml-4 hidden md:block">
@@ -65,6 +87,8 @@ export default function Header() {
             placeholder="Search anime..."
             className="pl-10 h-9"
             aria-label="Search anime"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         </form>
@@ -90,6 +114,7 @@ export default function Header() {
                   placeholder="Search anime..."
                   className="pl-10 h-10 text-base"
                   aria-label="Search anime"
+                  defaultValue={searchQuery}
                 />
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               </form>
@@ -107,6 +132,16 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
+               <Link
+                  href="/search?sort=SCORE_DESC"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    "transition-colors hover:text-primary",
+                    searchParams.get('sort') === 'SCORE_DESC' ? "text-primary" : "text-foreground"
+                  )}
+                >
+                  Top Anime
+                </Link>
             </nav>
           </SheetContent>
         </Sheet>
