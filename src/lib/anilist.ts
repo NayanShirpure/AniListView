@@ -1,11 +1,21 @@
 import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
+import { persistCache } from 'apollo-cache-persist';
 import type { PageResult, Anime, AiringScheduleItem } from './types';
 import { GET_TRENDING_ANIME, GET_SEASONAL_ANIME, SEARCH_ANIME, GET_ANIME_DETAILS, GET_AIRING_SCHEDULE, GET_GENRES_AND_TAGS } from './queries';
 import { getCurrentSeason, getNextSeason } from './utils';
 
+const cache = new InMemoryCache({});
+
+if (typeof window !== 'undefined') {
+  persistCache({
+    cache,
+    storage: window.localStorage,
+  });
+}
+
 const client = new ApolloClient({
   link: new HttpLink({ uri: "https://graphql.anilist.co" }),
-  cache: new InMemoryCache(),
+  cache,
 });
 
 export async function getTrendingAnime(perPage = 15): Promise<Anime[]> {
@@ -93,8 +103,9 @@ export async function searchAnime(options: {
   season?: string;
   seasonYear?: number;
   status?: string;
+  title_startsWith?: string;
 }): Promise<PageResult> {
-  const { query, page = 1, perPage = 20, sort = ['POPULARITY_DESC'], genres, format, season, seasonYear, status } = options;
+  const { query, page = 1, perPage = 20, sort = ['POPULARITY_DESC'], genres, format, season, seasonYear, status, title_startsWith } = options;
   const variables: any = { search: query, page, perPage, sort };
 
   if (genres && genres.length > 0) variables.genre_in = genres;
@@ -102,6 +113,7 @@ export async function searchAnime(options: {
   if (season) variables.season = season;
   if (seasonYear) variables.seasonYear = seasonYear;
   if (status) variables.status = status;
+  if (title_startsWith) variables.title_startsWith = title_startsWith;
 
   try {
     const { data } = await client.query({

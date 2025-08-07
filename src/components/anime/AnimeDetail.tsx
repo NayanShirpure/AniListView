@@ -40,7 +40,7 @@ export default function AnimeDetail({ anime }: AnimeDetailProps) {
       </div>
 
       <div className="container mx-auto px-4 -mt-20 md:-mt-24">
-        <div className="flex flex-col md:flex-row gap-8 items-end">
+        <div className="flex flex-col md:flex-row gap-8 items-start">
           <MotionDiv 
             className="w-48 md:w-1/3 lg:w-1/4 flex-shrink-0"
             initial={{ y: 20, opacity: 0 }}
@@ -54,10 +54,12 @@ export default function AnimeDetail({ anime }: AnimeDetailProps) {
               height={450}
               className="rounded-lg shadow-xl object-cover w-full h-auto"
               data-ai-hint="anime manga"
+              placeholder="blur"
+              blurDataURL={anime.coverImage?.color || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8//VrPQAJDgNaKV53EwAAAABJRU5ErkJggg=='}
             />
           </MotionDiv>
           <MotionDiv 
-            className="w-full md:w-2/3 lg:w-3/4 pb-4"
+            className="w-full md:w-2/3 lg:w-3/4 pt-28"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.5 }}

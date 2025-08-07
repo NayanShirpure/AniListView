@@ -26,6 +26,8 @@ export default function AnimeCard({ anime }: AnimeCardProps) {
               className="object-cover"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
               data-ai-hint="anime manga"
+              placeholder="blur"
+              blurDataURL={anime.coverImage?.color || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8//VrPQAJDgNaKV53EwAAAABJRU5ErkJggg=='}
             />
             {anime.averageScore && (
               <Badge variant="secondary" className="absolute top-2 right-2 flex items-center gap-1">
