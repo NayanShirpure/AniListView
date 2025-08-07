@@ -1,6 +1,7 @@
-import {genkit} from 'genkit';
+'use client';
+import { defineNextJsHandler } from '@genkit-ai/next/server';
 import {googleAI} from '@genkit-ai/googleai';
-import {nextJSHandler} from '@genkit-ai/next';
+import {genkit} from 'genkit';
 import { z } from 'zod';
 
 genkit({
@@ -12,4 +13,5 @@ genkit({
   dotEnvPath: '.env.local',
 });
 
-export const POST = nextJSHandler();
+
+export const {GET, POST} = defineNextJsHandler();
