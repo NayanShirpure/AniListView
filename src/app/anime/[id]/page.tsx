@@ -10,6 +10,47 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Star, Tv, Calendar, Users, Clapperboard, Film } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AnimeDetail from '@/components/anime/AnimeDetail';
+import type { Metadata } from 'next';
+
+type Props = {
+  params: { id: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const id = parseInt(params.id, 10);
+  if (isNaN(id)) {
+    return { title: 'Not Found' };
+  }
+  const anime = await getAnimeDetails(id);
+
+  if (!anime) {
+    return {
+      title: 'Anime Not Found',
+      description: 'The anime you are looking for could not be found.',
+    };
+  }
+
+  const title = anime.title.english || anime.title.romaji;
+  const description = anime.description?.replace(/<br>/g, ' ').substring(0, 160) + '...';
+
+  return {
+    title: `${title} - AniListView`,
+    description: description,
+    openGraph: {
+      title: title,
+      description: description,
+      images: [
+        {
+          url: anime.bannerImage || anime.coverImage.extraLarge,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+  };
+}
+
 
 function AnimeDetailSkeleton() {
   return (

@@ -77,6 +77,7 @@ export default async function HomePage() {
         transition={{ duration: 0.5 }}
       >
         <section>
+          <h1 className="sr-only">Anime Spotlight</h1>
           <Suspense fallback={<SpotlightSkeleton />}>
             <TrendingAnimeData />
           </Suspense>
@@ -89,7 +90,7 @@ export default async function HomePage() {
         transition={{ duration: 0.5, delay: 0.2 }}
       >
         <section>
-          <h1 className="font-headline text-3xl font-bold mb-6">Trending Now</h1>
+          <h2 className="font-headline text-3xl font-bold mb-6">Trending Now</h2>
           <Suspense fallback={<CarouselSkeleton />}>
             <TrendingCarousel trendingAnime={await getTrendingAnime()} />
           </Suspense>
