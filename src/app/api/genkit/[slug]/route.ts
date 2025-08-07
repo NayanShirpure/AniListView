@@ -1,5 +1,5 @@
 'use client';
-import { defineNextJsHandler } from '@genkit-ai/next/server';
+import { defineNextJsHandler } from '@genkit-ai/next';
 import {googleAI} from '@genkit-ai/googleai';
 import {genkit} from 'genkit';
 import { z } from 'zod';
