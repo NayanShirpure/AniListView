@@ -6,6 +6,7 @@ import Footer from '@/components/layout/Footer';
 import { MotionDiv } from '@/components/MotionDiv';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://anilistview.vercel.app'),
@@ -82,10 +83,12 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=PT+Sans:wght@400;700&display=swap"
           rel="stylesheet"
         />
+        <Script async={true} data-cfasync="false" src="//pl27698850.revenuecpmgate.com/f16efe675486f0a3ae43096ea3fd33eb/invoke.js"></Script>
       </head>
       <body className="font-body antialiased bg-background text-foreground">
         <div className="flex flex-col min-h-screen">
           <HeaderWrapper />
+          <div id="container-f16efe675486f0a3ae43096ea3fd33eb" className="container mx-auto my-4 flex justify-center items-center"></div>
           <MotionDiv
             tag="main"
             className="flex-grow container mx-auto px-4 py-8"
