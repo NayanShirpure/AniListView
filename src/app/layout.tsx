@@ -8,8 +8,37 @@ import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const metadata: Metadata = {
-  title: 'AniListView - Discover Your Next Favorite Anime',
-  description: 'Explore, discover, and track your favorite anime with AniListView. Powered by the AniList API.',
+  metadataBase: new URL('https://anilistview.vercel.app'),
+  title: 'AniListView: Explore & Discover Your Next Favorite Anime',
+  description: 'Explore, discover, and search for your next favorite anime with AniListView. Track your progress, view recommendations, and browse a massive anime database.',
+  openGraph: {
+    title: 'AniListView: Explore & Discover Your Next Favorite Anime',
+    description: 'A beautifully designed anime tracking and discovery application.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'AniListView Banner',
+      },
+    ],
+    siteName: 'AniListView',
+    type: 'website',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AniListView: Explore & Discover Your Next Favorite Anime',
+    description: 'A beautifully designed anime tracking and discovery application.',
+    images: ['/og-image.png'],
+  },
+  alternates: {
+    canonical: '/',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 function HeaderSkeleton() {
