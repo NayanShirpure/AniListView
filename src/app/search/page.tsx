@@ -18,7 +18,7 @@ function GridSkeleton() {
   );
 }
 
-export default function SearchPage() {
+function SearchPageContent() {
     return (
         <FilterProvider>
             <div className="flex flex-col md:flex-row gap-8 items-start">
@@ -32,5 +32,13 @@ export default function SearchPage() {
                 </div>
             </div>
         </FilterProvider>
+    )
+}
+
+export default function SearchPage() {
+    return (
+        <Suspense fallback={<GridSkeleton />}>
+            <SearchPageContent />
+        </Suspense>
     )
 }
