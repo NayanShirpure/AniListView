@@ -4,11 +4,40 @@ import { Toaster } from '@/components/ui/toaster';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { MotionDiv } from '@/components/MotionDiv';
+import { Suspense } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const metadata: Metadata = {
   title: 'AniListView - Discover Your Next Favorite Anime',
   description: 'Explore, discover, and track your favorite anime with AniListView. Powered by the AniList API.',
 };
+
+function HeaderSkeleton() {
+  return (
+    <div className="bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
+      <div className="container mx-auto px-4 flex items-center h-16">
+        <Skeleton className="h-8 w-32" />
+        <div className="hidden md:flex items-center gap-4 ml-6">
+          <Skeleton className="h-6 w-16" />
+          <Skeleton className="h-6 w-16" />
+          <Skeleton className="h-6 w-16" />
+          <Skeleton className="h-6 w-20" />
+        </div>
+        <div className="flex-1" />
+        <Skeleton className="h-9 w-64 hidden md:block" />
+        <Skeleton className="h-9 w-9 md:hidden ml-4" />
+      </div>
+    </div>
+  );
+}
+
+function HeaderWrapper() {
+  return (
+    <Suspense fallback={<HeaderSkeleton />}>
+      <Header />
+    </Suspense>
+  )
+}
 
 export default function RootLayout({
   children,
@@ -27,7 +56,7 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased bg-background text-foreground">
         <div className="flex flex-col min-h-screen">
-          <Header />
+          <HeaderWrapper />
           <MotionDiv
             tag="main"
             className="flex-grow container mx-auto px-4 py-8"
