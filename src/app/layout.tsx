@@ -85,6 +85,7 @@ export default function RootLayout({
         />
         <Script async={true} data-cfasync="false" src="//pl27698850.revenuecpmgate.com/f16efe675486f0a3ae43096ea3fd33eb/invoke.js"></Script>
         <Script type='text/javascript' src='//pl27698857.revenuecpmgate.com/8b/bc/dd/8bbcdd8f830290516220a7dfb490a31f.js'></Script>
+        <Script type='text/javascript' src='//pl27698886.revenuecpmgate.com/40/76/46/407646cf42e40ac768d701c175164630.js'></Script>
       </head>
       <body className="font-body antialiased bg-background text-foreground">
         <div className="flex flex-col min-h-screen">
